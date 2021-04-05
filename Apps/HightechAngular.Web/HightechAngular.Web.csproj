@@ -8,6 +8,7 @@
         <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.3" />
         <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.3" />
@@ -39,6 +40,14 @@
         <None Remove="$(SpaRoot)**" />
         <None Remove="Areas\Identity\Pages\Account\Manage\**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+        <Compile Remove="Controllers\CartController.cs" />
+        <Compile Remove="Controllers\GetCatalogController.cs" />
+        <Compile Remove="Dto\CompleteOrder.cs" />
+        <Compile Remove="Dto\CompleteOrderAdmin.cs" />
+        <Compile Remove="Dto\DisputeOrder.cs" />
+        <Compile Remove="Dto\GetCategoryListItem.cs" />
+        <Compile Remove="Controllers\IndexController.cs" />
+        <Compile Remove="DropdownProviders\GetAllOrders.cs" />
     </ItemGroup>
     <ItemGroup>
       <Compile Remove="Areas\Identity\CustomIdentityErrorDescriber.cs" />

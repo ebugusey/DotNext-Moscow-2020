@@ -13,6 +13,7 @@ using Infrastructure.Extensions;
 //using Infrastructure.Extensions;
 using Infrastructure.SwaggerSchema.Dropdowns.Providers;
 using Infrastructure.SwaggerSchema.TypeProvider;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -81,6 +82,7 @@ namespace HightechAngular.Web
                 options.Cookie.IsEssential = true;
             });
             services.AddCors();
+            services.AddMediatR(typeof(Startup));
         }
 
         private static void ConfigureIdentityAndAuthentication(IServiceCollection services)

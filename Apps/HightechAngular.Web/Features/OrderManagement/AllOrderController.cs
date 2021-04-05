@@ -1,32 +1,26 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Force.Ccc;
 using Force.Extensions;
 using HightechAngular.Orders.Entities;
-using HightechAngular.Shop.Features.Cart;
 using HightechAngular.Shop.Features.MyOrders;
 using Infrastructure.AspNetCore;
-using Infrastructure.Cqrs;
-using Mapster;
-using Microsoft.AspNetCore.Authorization;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace HightechAngular.Admin.Features.OrderManagement
 {
     public class OrderController : ApiControllerBase
     {
         private readonly IQueryable<Order> _orders;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
 
-        public OrderController(IQueryable<Order> orders, IUnitOfWork unitOfWork)
+        public OrderController(IQueryable<Order> orders, IMediator mediator)
         {
             _orders = orders;
-            _unitOfWork = unitOfWork;
+            _mediator = mediator;
         }
-        
+
         [HttpGet()]
         [ProducesResponseType(typeof(OrderListItem), StatusCodes.Status200OK)]
         public IActionResult GetAll([FromQuery] GetAllOrders query) =>
@@ -38,11 +32,8 @@ namespace HightechAngular.Admin.Features.OrderManagement
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> PayOrder([FromBody] PayOrder command)
         {
-            await Task.Delay(1000);
-            var order = _orders.First(x => x.Id == command.OrderId);
-            var result = order.BecomePaid();
-            _unitOfWork.Commit();
-            return Ok(new HandlerResult<OrderStatus>(result));
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpGet("GetOrders")]
@@ -55,19 +46,15 @@ namespace HightechAngular.Admin.Features.OrderManagement
         [HttpPut("Shipped")]
         public async Task<IActionResult> Shipped([FromBody] ShipOrder command)
         {
-            var order = _orders.First(x => x.Id == command.OrderId);
-            await Task.Delay(1000);
-            var result = order.BecomeShipped();
-            return Ok(new HandlerResult<OrderStatus>(result));
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpPut("Complete")]
         public async Task<IActionResult> Complete([FromBody] CompleteOrderAdmin command)
         {
-            var order = _orders.First(x => x.Id == command.OrderId);
-            await Task.Delay(1000);
-            var result = order.BecomeComplete();
-            return Ok(new HandlerResult<OrderStatus>(result));
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
     }
 }
